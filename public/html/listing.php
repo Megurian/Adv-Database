@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         <span><?= $errors['image'] ?? '' ?></span>
         <br> -->
 
-        <button type="submit" name="submit">Submit Listing</button>
+        <input type="submit" name="submit" value="Submit Listing">
     </form>
 </body>
 </html>
