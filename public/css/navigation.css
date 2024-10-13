@@ -135,6 +135,7 @@ input:not(:placeholder-shown) ~ .reset {
     cursor: pointer;
     position: relative;
     transition: color 0.3s ease-in-out;
+    
 }
 .nav .text:nth-child(2) {
     margin: 0 40px 0 40px;
@@ -154,7 +155,17 @@ input:not(:placeholder-shown) ~ .reset {
 .nav .text:hover::before {
     width: 100%;
 }
+.nav .bx-user-circle {
+    font-size: 1.3em;
+    transition: color 0.3s ease-in-out;
+}
+.nav .bx-user-circle:hover {
+    color: var(--header-color);
+    transition: 0.5s ease;
+}
 /* NAV CSS END HERE */
+
+
 
 .header.scrolled .nav .text{ /* this is for JS */
     color: black;
