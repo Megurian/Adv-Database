@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="create-browse">
-                <button class="btn list" onclick="location.href='index.html'">
+                <button class="btn list" onclick="window.location.href='listing.php';">
                     <i class='bx bx-plus-circle'></i>
                     <span>List Antique</span>
                 </button>
