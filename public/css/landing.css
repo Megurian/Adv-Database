@@ -46,6 +46,10 @@
 .register-form label {
     position: relative;
 }
+
+span {
+    font-size: 0.8em;
+}
   
 .register-form label .input {
     width: 100%;
@@ -78,7 +82,7 @@
 }
   
 .register-form label .input:valid + span {
-    color: green;
+    color: var(--text-color);
 }
 
 .submit {
