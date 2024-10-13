@@ -1,0 +1,105 @@
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.banner {
+    height: 87vh;
+    background-image: url(../imgs/banner.jpeg);
+    background-size: cover;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    color: white;
+}
+
+.title-intro .title{
+    text-shadow: 2px 2px 10px black;
+}
+
+.register-form {
+    
+    color: white;
+    opacity: 0.9;
+    backdrop-filter: blur(10px);
+    max-width: 30em;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+}
+
+.register-form h2 {
+    color: var(--header-color);
+}
+
+.register-form .flex {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+.register-form label {
+    position: relative;
+}
+  
+.register-form label .input {
+    width: 100%;
+    padding: 5px 0px 15px 10px;
+    outline: 0;
+    border: 1px solid var(--text-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+  
+.register-form label .input + span {
+    position: absolute;
+    left: 11px;
+    top: 15px;
+    color: grey;
+    font-size: 0.5em;
+    cursor: text;
+    transition: 0.3s ease;
+}
+  
+.register-form label .input:placeholder-shown + span {
+    top: 5px;
+    font-size: 0.9em;
+}
+  
+.register-form label .input:focus + span,.register-form label .input:valid + span {
+    top: 20px;
+    font-size: 0.7em;
+    font-weight: 600;
+}
+  
+.register-form label .input:valid + span {
+    color: green;
+}
+
+.submit {
+    border: none;
+    outline: none;
+    background-color: var(--header-color);
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    transform: .3s ease;
+}
+  
+.submit:hover {
+    background-color: var(--accent-color);
+}
+
+.signin {
+    text-align: center;
+}
+  
+.signin a {
+    color: var(--header-color);
+    font-weight: 600;
+}
