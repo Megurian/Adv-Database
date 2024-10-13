@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Allura&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+.allura-regular {
+    font-family: "Allura", cursive;
+}
+
+.montserrat-regular {
+    font-family: "Montserrat", sans-serif;
+}
+
+* {
+    padding: 0px;
+    margin: 0px;
+    font-family:  Montserrat , sans-serif;
+}
+
+:root {
+    --primary-color: #faebd7;
+    --secodary-color: #363d46;
+    --header-color: #e2725b;
+    --text-color: #6a7b8c;
+    --accent-color: #008080;
+}
+
+
