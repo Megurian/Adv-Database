@@ -1,0 +1,266 @@
+
+.header {
+    background-color: var(--primary-color);
+    border-radius: 0px 0px 10px 10px;
+    height: 5em;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+    top: 0;
+    width: 100vw;
+    transition: background-color 0.3s ease-in-out;
+    justify-content: space-around;
+}
+.header.scrolled { /* this is for JS */
+    background-image: none;
+    background-color: white;
+}
+
+
+
+/* SEARCH BAR CSS START HERE */
+.form button {
+    border: none;
+    background: none;
+    color: #8b8ba7;
+}
+  /* styling of whole input container */
+.form {
+    --timing: 0.3s;
+    --width-of-input: 190px;
+    --height-of-input: 30px;
+    --border-height: 2px;
+    --input-bg: #fff;
+    --border-color: var(--header-color);
+    --border-radius: 30px;
+    --after-border-radius: 1px;
+    position: relative;
+    width: var(--width-of-input);
+    height: var(--height-of-input);
+    display: flex;
+    align-items: center;
+    padding-inline: 0.8em;
+    border-radius: var(--border-radius);
+    transition: border-radius 0.5s ease;
+    background: var(--input-bg,#fff);
+}
+  /* styling of Input */
+.input {
+    font-size: 0.8rem;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    padding-inline: 0.5em;
+    padding-block: 0.7em;
+    border: none;
+}
+  /* styling of animated border */
+.form:before {
+    content: "";
+    position: absolute;
+    background: var(--border-color);
+    transform: scaleX(0);
+    transform-origin: center;
+    width: 100%;
+    height: var(--border-height);
+    left: 0;
+    bottom: 0;
+    border-radius: 1px;
+    transition: transform var(--timing) ease;
+}
+  /* Hover on Input */
+.form:focus-within {
+    border-radius: var(--after-border-radius);
+}
+  
+input:focus {
+    outline: none;
+}
+  /* here is code of animated border */
+.form:focus-within:before {
+    transform: scale(1);
+}
+  /* styling of close button */
+  /* == you can click the close button to remove text == */
+.reset {
+    border: none;
+    background: none;
+    opacity: 0;
+    visibility: hidden;
+}
+  /* close button shown when typing */
+input:not(:placeholder-shown) ~ .reset {
+    opacity: 1;
+    visibility: visible;
+}
+  /* sizing svg icons */
+.form svg {
+    width: 17px;
+    margin-top: 3px;
+}
+/* SEARCH BAR CSS END HERE */
+
+
+/* LOGO CSS START HERE */
+.logo a {
+    color: var(--secodary-color);
+    text-decoration: none;
+    font-family: Allura;
+    font-size: 2rem;
+    font-weight: 700;
+    transition: color 0.3s ease-in-out;
+}
+
+.header.scrolled .logo a { /* this is for JS */
+    color: black;
+    text-shadow: 0 0 0;
+}
+
+.logo a:hover {
+    color: red !important;
+    transition: 300ms;
+}
+/* LOGO CSS END HERE */
+
+
+
+/* NAV CSS START HERE */
+.nav .text {
+    color: var(--secodary-color);
+    text-decoration: none;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+.nav .text:nth-child(2) {
+    margin: 0 40px 0 40px;
+}
+
+.nav .text::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 0;
+    
+    background-color: var(--header-color);
+    transition: 0.5s ease;
+}
+.nav .text:hover::before {
+    width: 100%;
+}
+/* NAV CSS END HERE */
+
+.header.scrolled .nav .text{ /* this is for JS */
+    color: black;
+    border-color: black;
+}
+
+
+.header.scrolled .nav .menu-icon .bx{ /* this is for JS */
+    color: black;
+    border-color: black;
+}
+
+.nav .menu-icon .bx:hover {
+    color: white;
+    font-weight: bold;
+    transition: 300ms;
+}
+
+@media only screen and (max-width: 726px) {
+    .header .hideOnMobile {
+        display: none;
+    }
+}
+
+
+
+/* Sidebar */
+
+@media only screen and (min-width: 727px) {
+    .menu-icon {
+        display: none;
+    }
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 250px;
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(5px);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+}
+
+@media only screen and (max-width: 400px) {
+    .sidebar {
+        width: 100%;
+        align-items: center;
+    }
+}
+
+.sidebar.scrolled { /* this is for JS */
+    background-image: none;
+    background-color: white;
+}
+
+.logo-sidebar {
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.logo-sidebar a{
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 10px black;
+    font-size: 1.5rem;
+    font-weight: 700;
+    transition: color 0.3s ease-in-out;
+}
+
+.sidebar.scrolled .logo-sidebar a {
+    color: black;
+    text-shadow: 0 0 0;
+}
+
+.logo-sidebar a:hover {
+    color: red !important;
+    transition: 300ms;
+}
+
+.nav-sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    transition: color 0.3s ease-in-out;
+}
+
+.sidebar.scrolled .nav-sidebar a{ /* this is for JS */
+    color: black;
+    border-color: black;
+}
+
+.nav-sidebar a:hover {
+    color: white;
+    font-weight: 1000;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: 300ms;
+}
