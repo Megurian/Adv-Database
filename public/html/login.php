@@ -1,11 +1,26 @@
 <?php
 require_once '../../src/db_modules/database.php';
-require_once '../../src/db_modules/antique.class.php';
+require_once '../../src/db_modules/autoload_classes.php';
 require_once '../../src/utils/functions.php';
-$antiqueObj = new Antique();
+$accountObj = new Account();
+
+$email = $password = '';
+$errors = '';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+    if (filter_var(clean_input($_POST['email']), FILTER_VALIDATE_EMAIL)){
+        $email = clean_input($_POST['email']);
+    } else {
+        $errors = 'invalid email/password';
+    }
 
+    $password = clean_input($_POST['password']);
+
+    if (empty($errors) && $accountObj->userLogin($email, $password)){
+        header("Location: user-landing.php");
+    } else {
+        $errors = 'invalid email/password';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -59,21 +74,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
 
             <div>
-                <form action="" method="" class="register-form" autocomplete="off">
+                <form action="" method="POST" class="register-form" autocomplete="off">
                     <h2>Login</h2>
                     <p class="message">See the beauty of yesterday. </p>
+                    <span><?= $errors ?? '' ?></span>
                             
                     <label>
-                        <input required="" placeholder="" type="email" class="input">
+                        <input required placeholder="" type="email" name="email" class="input" value="<?= htmlspecialchars($email); ?>">
                         <span>Email</span>
                     </label> 
                         
                     <label>
-                        <input required="" placeholder="" type="password" class="input">
+                        <input required placeholder="" type="password" name="password" class="input">
                         <span>Password</span>
                     </label>
                     
-                    <input type="submit" value="Login" class="submit">
+                    <input type="submit" name="submit" value="Login" class="submit">
 
                     <div class="login-actions">
                         <p class="forgotpassword"><a href="#">Forgot Password?</a></p>

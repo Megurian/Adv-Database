@@ -30,4 +30,20 @@ class Account {
             return false;
         }
     }
+
+    function userLogin($email, $password) {
+        $sql = "SELECT * FROM account WHERE email = :email LIMIT 1;";
+
+        $prepQuery = $this->db->connect()->prepare($sql);
+
+        $prepQuery->bindParam(':email', $email);
+
+        if($prepQuery->execute()) {
+            $data = $prepQuery->fetch();
+            if(isset($data['password']) && password_verify($password, $data['password'])){
+                return true;
+            }
+        }
+        return false;
+    }
 }
