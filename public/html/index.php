@@ -158,7 +158,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
                     <input type="submit" name="submit" value="Submit" class="submit">
 
-                    <p class="signin">Already have an acount ? <a href="login.html">Signin</a> </p>
+                    <p class="signin">Already have an acount ? <a href="login.php">Log in</a> </p>
                 </form>
             </div>
         </div>

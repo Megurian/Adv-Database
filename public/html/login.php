@@ -67,7 +67,7 @@
 
                     <div class="login-actions">
                         <p class="forgotpassword"><a href="#">Forgot Password?</a></p>
-                        <p class="signin">Don't have an acount ? <a href="index.html">Signup</a> </p>
+                        <p class="signin">Don't have an acount ? <a href="index.php">Signup</a> </p>
                     </div>
                 </form>
             </div>
