@@ -1,6 +1,6 @@
 <?php
 require_once '../../src/db_modules/database.php';
-require_once '../../src/db_modules/user.class.php';
+require_once '../../src/db_modules/autoload_classes.php';
 require_once '../../src/utils/functions.php';
 $accountObj = new Account();
 

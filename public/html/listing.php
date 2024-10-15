@@ -1,6 +1,6 @@
 <?php
 require_once '../../src/db_modules/database.php';
-require_once '../../src/db_modules/antique.class.php';
+require_once '../../src/db_modules/autoload_classes.php';
 require_once '../../src/utils/functions.php';
 $antiqueObj = new Antique();
 

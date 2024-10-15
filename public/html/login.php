@@ -1,3 +1,13 @@
+<?php
+require_once '../../src/db_modules/database.php';
+require_once '../../src/db_modules/antique.class.php';
+require_once '../../src/utils/functions.php';
+$antiqueObj = new Antique();
+
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
