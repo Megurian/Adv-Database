@@ -127,16 +127,22 @@ input:not(:placeholder-shown) ~ .reset {
 
 
 /* NAV CSS START HERE */
+.nav {
+    display: flex;
+    flex-direction: row;
+    
+}
+
 .nav .text {
     color: var(--secondary-color);
     text-decoration: none;
     text-transform: capitalize;
     font-size: 0.9em;
     cursor: pointer;
-    position: relative;
+    position: relative; /* Added to .text to make it a reference for the dropdown */
     transition: color 0.3s ease-in-out;
-    
 }
+
 .nav .text:nth-child(2) {
     margin: 0 40px 0 40px;
 }
@@ -148,20 +154,49 @@ input:not(:placeholder-shown) ~ .reset {
     bottom: 0;
     height: 2px;
     width: 0;
-    
     background-color: var(--header-color);
     transition: 0.5s ease;
 }
+
 .nav .text:hover::before {
     width: 100%;
 }
+
 .nav .bx-user-circle {
     font-size: 1.3em;
     transition: color 0.3s ease-in-out;
 }
-.nav .bx-user-circle:hover {
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    top: 65%; /* Ensures dropdown appears directly below the text element */
+     /* Aligns dropdown with the text element */
+}
+
+.nav .text:hover {
     color: var(--header-color);
-    transition: 0.5s ease;
+}
+
+.nav .dropdown:hover .dropdown-content{
+    display: block;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
 }
 /* NAV CSS END HERE */
 
