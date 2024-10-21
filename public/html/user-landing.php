@@ -53,7 +53,7 @@
                     <span>List Antique</span>
                 </button>
                   
-                <button class="btn browse">
+                <button class="btn browse" onclick="window.location.href='browse.php';">
                     <i class='bx bx-search'></i>
                     <span>Browse Antique</span>
                 </button>

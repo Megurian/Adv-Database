@@ -16,7 +16,7 @@
 }
 
 :root {
-    --primary-color: #faebd7;
+    --primary-color: rgb(250, 235, 215);
     --secondary-color: #363d46;
     --header-color: #e2725b;
     --text-color: #6a7b8c;
