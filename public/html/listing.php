@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         // Attempt to add the product to the database.
         if($antiqueObj->addAntique()){
             // If successful, redirect to the product listing page.
-            /* header('Location: rentals.table.php'); */
+            header('Location: browse.php');
         } else {
             // If an error occurs during insertion, display an error message.
             echo 'Something went wrong when adding the new product.';
@@ -99,70 +99,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Antique Listing Form</title>
-    <link rel="stylesheet" href="https://classless.de/classless.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css/root.css">
     <link rel="stylesheet" href="../css/listing.css">
 </head>
 <body>
-    <button onclick="">BACK</button>
-    <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-        <h2>Antique Listing Form</h2>
-        <p> All fields are required</p>
-        <hr><br>
+    <div class="container">
 
-        <label for="name">Antique Name:</label>
-        <input type="text" id="name" name="name" value="<?= htmlspecialchars($name) ?>" required>
-        <span><?= $errors['name'] ?? '' ?></span>
-        <br>
+        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+            <button onclick="window.location.href='user-landing.php';"><i class='bx bx-arrow-back'></i></button>
+            <br> <br>
+            <h2>Antique Listing Form</h2>
+            <p> All fields are required</p>
+            <hr><br>
 
-        <label for="description">Description:</label><br>
-        <textarea id="description" name="description" rows="4" required><?= htmlspecialchars($description) ?></textarea>
-        <span><?= $errors['description'] ?? '' ?></span>
-        <br>
+            <label for="name">Antique Name:</label>
+            <input type="text" id="name" name="name" value="<?= htmlspecialchars($name) ?>" required>
+            <span><?= $errors['name'] ?? '' ?></span>
+            <br>
 
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-            <option value="">-- Select Category --</option>
-            <?php
-                $categories = $antiqueObj->fetchCategory();
-                foreach ($categories as $cat) {
-            ?>
-            <option value="<?= $cat['id'] ?>" <?= ($category == $cat['id']) ? 'selected' : '' ?>><?= $cat['name'] ?></option>
-            <?php
-                }
-            ?>
-        </select>
-        <span><?= $errors['category'] ?? '' ?></span>
-        <br>
+            <label for="description">Description:</label><br>
+            <textarea id="description" name="description" rows="4" required><?= htmlspecialchars($description) ?></textarea>
+            <span><?= $errors['description'] ?? '' ?></span>
+            <br>
 
-        <label for="year">Year of Origin:</label>
-        <input type="number" id="year" name="year" min="1000" max="2024" value="<?= htmlspecialchars($year) ?>" required>
-        <span><?= $errors['year'] ?? '' ?></span>
-        <br>
-                
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" value="<?= htmlspecialchars($price) ?>" required>
-        <span><?= $errors['price'] ?? '' ?></span>
-        <br>
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="">-- Select Category --</option>
+                <?php
+                    $categories = $antiqueObj->fetchCategory();
+                    foreach ($categories as $cat) {
+                ?>
+                <option value="<?= $cat['id'] ?>" <?= ($category == $cat['id']) ? 'selected' : '' ?>><?= $cat['name'] ?></option>
+                <?php
+                    }
+                ?>
+            </select>
+            <span><?= $errors['category'] ?? '' ?></span>
+            <br>
 
-        <div class="location">
-            <label for="location">Antique Location: </label><br>
-            <input type="text" name="street" placeholder="Street" value="<?= htmlspecialchars($street) ?>" required>
-            <span><?= $errors['street'] ?? '' ?></span>
-            <input type="text" name="barangay" placeholder="Barangay" value="<?= htmlspecialchars($barangay) ?>" required>
-            <span><?= $errors['barangay'] ?? '' ?></span>
-            <input type="text" name="city" placeholder="City" value="<?= htmlspecialchars($city) ?>" required>
-            <span><?= $errors['city'] ?? '' ?></span>
-            <input type="text" name="code" placeholder="Postal Code" value="<?= htmlspecialchars($code) ?>" required>
-            <span><?= $errors['code'] ?? '' ?></span>
-        </div>
-        
-        <!-- <label for="image">Antique Image: </label>
-        <input type="file" name="image" id="image" required>
-        <span><?= $errors['image'] ?? '' ?></span>
-        <br> -->
+            <label for="year">Year of Origin:</label>
+            <input type="number" id="year" name="year" min="1000" max="2024" value="<?= htmlspecialchars($year) ?>" required>
+            <span><?= $errors['year'] ?? '' ?></span>
+            <br><br>
+                    
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" value="<?= htmlspecialchars($price) ?>" required>
+            <span><?= $errors['price'] ?? '' ?></span>
+            <br><br>
 
-        <input type="submit" name="submit" value="Submit Listing">
-    </form>
+            <label for="location">Antique Location:
+                <div class="location-fields">
+                    <input type="text" name="street" placeholder="Street" value="<?= htmlspecialchars($street) ?>" required>
+                    <span><?= $errors['street'] ?? '' ?></span>
+                    <input type="text" name="barangay" placeholder="Barangay" value="<?= htmlspecialchars($barangay) ?>" required>
+                    <span><?= $errors['barangay'] ?? '' ?></span>
+                    <input type="text" name="city" placeholder="City" value="<?= htmlspecialchars($city) ?>" required>
+                    <span><?= $errors['city'] ?? '' ?></span>
+                    <input type="text" name="code" placeholder="Postal Code" value="<?= htmlspecialchars($code) ?>" required>
+                    <span><?= $errors['code'] ?? '' ?></span>
+                </div>
+            </label>
+            <div class="submit-container">
+                <input type="submit" name="submit" value="Submit Listing">
+            </div>
+        </form>
+    </div>
 </body>
 </html>

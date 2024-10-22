@@ -40,6 +40,22 @@ class Antique {
         return $query->execute();
     }
 
+    function fetchAllRecord($keyword = ''){
+        $sql_statement = "SELECT * FROM antique WHERE antique_name LIKE CONCAT('%', :keyword, '%');";    //sql query to fetch all records
+
+        //prepare query for execution
+        $query = $this->db->connect()->prepare($sql_statement);
+        $query->bindParam(":keyword", $keyword);
+
+        $data = null;    //initialize a variable to hold the fetched data
+
+        if($query->execute()){
+            $data = $query->fetchAll(); //fetch all rows from the result set
+        }
+
+        return $data;   //return data after function called
+    }
+
     function fetchCategory() {
         $sql = "SELECT * FROM category ORDER BY name ASC;";
     
@@ -49,6 +65,20 @@ class Antique {
     
         if ($query->execute()) {
             $data = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows as an associative array.
+        }
+
+        return $data;
+    }
+
+    function getAntiqueCategorybyID($id = '') {
+        $sql = "SELECT * FROM category WHERE id = :id;";
+        $query = $this->db->connect()->prepare($sql);
+
+        $query->bindParam(':id', $id);
+
+        $data = null;
+        if ($query->execute()) {
+            $data = $query->fetch(); // Fetch all rows as an associative array.
         }
 
         return $data;

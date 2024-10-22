@@ -2,3 +2,119 @@
     display: flex;
     justify-content: center;
 } */
+ /* General styling */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../imgs/pexels-technobulka-3014826.jpg);
+    background-size: cover;
+    
+}
+form {
+    background-color: rgba(250, 235, 215, 0.8);
+    margin: 20px;
+    max-width: 60vw;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+ h2 {
+    color:#E2725B;
+ }
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #6A7B8C;
+}
+
+input[type="text"], input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+input[type="text"], input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #5fa8d3;
+    outline: none;
+    box-shadow: 0 0 5px rgba(95, 168, 211, 0.5);
+}
+
+.submit-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input[type="submit"] {
+    width: 200px;
+    background-color: #6A7B8C;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #E2725B;
+}
+
+/* Back button styling */
+button {
+    display: inline-block;
+    font-size: 16px;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #5fa8d3;
+    color: white;
+    border-color: #5fa8d3;
+}
+
+/* Styling for the form location fields */
+.location-fields {
+    display: flex;
+    gap: 10px;
+}
+
+.location-fields input[type="text"] {
+    width: 50%;
+}
+
+@media (max-width: 600px) {
+    .location-fields input[type="text"] {
+        width: 100%;
+    }
+}

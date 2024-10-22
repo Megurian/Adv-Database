@@ -31,15 +31,25 @@
                 <a href="">Heirloom Alcove</a>
             </div>
             <div class="nav">
+                <div>
                 <a href="" class="text hideOnMobile">Antiques</a>
                 <a href="" class="text hideOnMobile">Recently listed</a>
+                </div>
+                
+                <div class="dropdown">
                 <a href="" class="text hideOnMobile"><i class='bx bx-user-circle'></i></a>
+                    <div class="dropdown-content">
+                        <a href="">Profile</a>
+                        <a href="index.php">Logout</a>
+                    </div>
+                
+                </div>
                 <a onclick=showSidebar() class="menu-icon"><i class='bx bx-menu'></i></a>
             </div>
         </div>
    
         <div class="banner">
-            <div class="title-intro">
+            <div cass="title-intro">
                 <div class="title">
                     <h1>Welcome to Heirloom Alcove</h1>
                 </div>
@@ -53,7 +63,7 @@
                     <span>List Antique</span>
                 </button>
                   
-                <button class="btn browse">
+                <button class="btn browse" onclick="window.location.href='browse.php';">
                     <i class='bx bx-search'></i>
                     <span>Browse Antique</span>
                 </button>
