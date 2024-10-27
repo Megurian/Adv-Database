@@ -49,7 +49,7 @@
         </div>
    
         <div class="banner">
-            <div cass="title-intro">
+            <div class="title-intro">
                 <div class="title">
                     <h1>Welcome to Heirloom Alcove</h1>
                 </div>

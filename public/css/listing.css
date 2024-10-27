@@ -118,3 +118,44 @@ button:hover {
         width: 100%;
     }
 }
+
+/* Image upload & preview */
+/* Style the preview container */
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Style each preview box */
+.preview-box {
+    position: relative;
+    display: inline-block;
+    max-width: 150px;
+    max-height: 150px;
+}
+
+/* Style the preview image */
+.preview-box img {
+    width: auto;
+    height: 100%;
+}
+
+/* Style the remove button ("X") */
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: black;
+    
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    line-height: 0px;
+    text-align: center;
+}

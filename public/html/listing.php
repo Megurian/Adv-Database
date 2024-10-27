@@ -4,12 +4,18 @@ require_once '../../src/db_modules/autoload_classes.php';
 require_once '../../src/utils/functions.php';
 $antiqueObj = new Antique();
 
-$name = $description = $category = $year = $price = '';
+$name = $description = $category = $year = $price = $imageName = '';
 $street = $barangay = $city = $code = '';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-    // Clean and validate inputs
+    $filename = str_replace(' ', '_', $_POST['filename']);
+    $uploadDir = 'antiques/'. $filename . "/";
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    $maxFileSize = 5 * 1024 * 1024; // 5MB
+    $fileCount = count($_FILES['images']['name']);
+
+    // validatation and sanitization
     $name = clean_input($_POST['name']);
     if (empty($name)) {
         $errors['name'] = "Antique name is required.";
@@ -55,18 +61,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         $errors['code'] = "Valid postal code is required.";
     }
 
-    // Check for file upload
-    /* if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $allowed = ['jpg', 'jpeg', 'png'];
-        $fileName = $_FILES['image']['name'];
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-
-        if (!in_array(strtolower($fileExt), $allowed)) {
-            $errors['image'] = "Invalid image format. Allowed formats: jpg, jpeg, png.";
-        }
+    //image validation
+    if($fileCount > 5) {
+        $error['image'] = "Error: Maximum of 5 pictures only";
     } else {
-        $errors['image'] = "Image upload is required.";
-    } */
+        // Ensure the upload directory exists
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+            $fileName = basename($_FILES['images']['name'][$key]);
+            $fileSize = $_FILES['images']['size'][$key];
+            $fileType = $_FILES['images']['type'][$key];
+            $fileError = $_FILES['images']['error'][$key];
+
+            //validation
+            switch (true) {
+                case !in_array($fileType, $allowedTypes):
+                    $error['image'] = "Error: Only JPG, PNG, and GIF files are allowed for $fileName.<br>";
+                    continue 2; // Skip to the next iteration of the foreach loop
+        
+                case $fileSize > $maxFileSize:
+                    $error['image'] = "Error: File size for $fileName exceeds the 2MB limit.<br>";
+                    continue 2; // Skip to the next iteration of the foreach loop
+        
+                case $fileError !== UPLOAD_ERR_OK:
+                    $error['image'] = "Error: There was an error uploading $fileName.<br>";
+                    continue 2; // Skip to the next iteration of the foreach loop
+                }
+            
+            $targetFilePath = targetFilePath($fileName, $fileName, $uploadDir);
+
+            // Move the file to the target directory
+            if (move_uploaded_file($tmpName, $targetFilePath)) {
+                
+            } else {
+                $error['image'] = "Error: There was an error moving $fileName to the upload directory.";
+            }
+        }
+    }
 
     // If no errors, process the form
     if (empty($errors)) {
@@ -160,10 +194,102 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                     <span><?= $errors['code'] ?? '' ?></span>
                 </div>
             </label>
+
+            <div img-upload>
+                <h2>Upload image</h2>
+                <span><?= $errors['image'] ?? '' ?></span>
+                
+
+                <input type="file" name="images[]" id="imageInput" accept="image/*" max="5" multiple oninput="previewImages()">
+                <br><br>
+                <!-- Container to hold the image previews -->
+                <div class="preview-container" id="previewContainer"></div>
+                <br>
+            </div>
             <div class="submit-container">
                 <input type="submit" name="submit" value="Submit Listing">
             </div>
         </form>
     </div>
+    <script>
+        let selectedFiles = [];
+
+        // This function handles the file input change event
+        function handleFileSelection(event) {
+            const newFiles = Array.from(event.target.files); // Get the newly selected files
+            const maxFiles = 5; // Maximum number of files allowed
+
+            // Add new files to selectedFiles, avoiding duplicates
+            newFiles.forEach(file => {
+                if (!selectedFiles.some(existingFile => existingFile.name === file.name && existingFile.size === file.size)) {
+                    selectedFiles.push(file);
+                }
+            });
+
+            // Limit the number of selected files
+            if (selectedFiles.length > maxFiles) {
+                alert(`You can only upload a maximum of ${maxFiles} files.`);
+                selectedFiles = selectedFiles.slice(0, maxFiles); // Keep only up to maxFiles
+            }
+
+            // Update the file input element with the current selected files
+            updateFileInput();
+            previewImages();
+        }
+
+        // This function updates the file input's file list
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            document.getElementById('imageInput').files = dataTransfer.files;
+        }
+
+        // Function to preview selected images
+        function previewImages() {
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = ""; //clear preview container
+
+            // Loop through the selected files and create a preview for each
+            selectedFiles.forEach((file, index) => {
+                if (file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    
+                    // When the file is loaded, create an image preview
+                    reader.onload = function(e) {
+                        const previewBox = document.createElement("div");
+                        previewBox.classList.add("preview-box");
+
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+
+                        // Create the remove button ("X")
+                        const removeBtn = document.createElement("button");
+                        removeBtn.innerHTML = "<i class='bx bx-x'></i>";
+                        removeBtn.classList.add("remove-btn");
+                        removeBtn.onclick = () => removeImage(index);
+
+                        // Append the image and the remove button to the preview box
+                        previewBox.appendChild(img);
+                        previewBox.appendChild(removeBtn);
+                        previewContainer.appendChild(previewBox);
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Function to remove an image from the selected files and update the preview
+        function removeImage(index) {
+            selectedFiles.splice(index, 1); // Remove the file from the array
+            updateFileInput(); // Update the input field
+            previewImages(); // Refresh the image previews
+        }
+
+        // Attach the event listener to the file input
+        document.getElementById('imageInput').addEventListener('change', handleFileSelection);
+    </script>
 </body>
 </html>
