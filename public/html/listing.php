@@ -6,15 +6,10 @@ $antiqueObj = new Antique();
 
 $name = $description = $category = $year = $price = $imageName = '';
 $street = $barangay = $city = $code = '';
+$img_src = [];
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-    $filename = str_replace(' ', '_', $_POST['filename']);
-    $uploadDir = 'antiques/'. $filename . "/";
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-    $maxFileSize = 5 * 1024 * 1024; // 5MB
-    $fileCount = count($_FILES['images']['name']);
-
     // validatation and sanitization
     $name = clean_input($_POST['name']);
     if (empty($name)) {
@@ -61,9 +56,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         $errors['code'] = "Valid postal code is required.";
     }
 
+    //directory setup
+    $antiqueName = str_replace(' ', '_', $_POST['name']);
+    $uploadDir = '../../src/assets/antiques/'. $antiqueName . "/";
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    $maxFileSize = 5 * 1024 * 1024; // 5MB
+    $fileCount = count($_FILES['images']['name']);
+
     //image validation
-    if($fileCount > 5) {
-        $error['image'] = "Error: Maximum of 5 pictures only";
+    $maxFileCount = 4;
+    if(empty($_FILES['images']['name'][0])) {
+        $errors['image'] = "Atleast 1 picture is required to submit a listing";
+    } elseif ($fileCount > $maxFileCount) {
+        $errors['image'] = "Maximum of " . $maxFileCount . "pictures only";
     } else {
         // Ensure the upload directory exists
         if (!is_dir($uploadDir)) {
@@ -79,25 +84,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             //validation
             switch (true) {
                 case !in_array($fileType, $allowedTypes):
-                    $error['image'] = "Error: Only JPG, PNG, and GIF files are allowed for $fileName.<br>";
+                    $errors['image'] = "Only JPG, PNG, and GIF files are allowed for $fileName.<br>";
                     continue 2; // Skip to the next iteration of the foreach loop
         
                 case $fileSize > $maxFileSize:
-                    $error['image'] = "Error: File size for $fileName exceeds the 2MB limit.<br>";
+                    $errors['image'] = "File size for $fileName exceeds the 2MB limit.<br>";
                     continue 2; // Skip to the next iteration of the foreach loop
         
                 case $fileError !== UPLOAD_ERR_OK:
-                    $error['image'] = "Error: There was an error uploading $fileName.<br>";
+                    $errors['image'] = "There was an error uploading $fileName.<br>";
                     continue 2; // Skip to the next iteration of the foreach loop
                 }
             
-            $targetFilePath = targetFilePath($fileName, $fileName, $uploadDir);
+            $targetFilePath = targetFilePath($fileName, $antiqueName, $uploadDir);
 
             // Move the file to the target directory
-            if (move_uploaded_file($tmpName, $targetFilePath)) {
-                
+            if (empty($errors['image'])) {
+                $img_src[] = $targetFilePath; //store image path for database upload
+                move_uploaded_file($tmpName, $targetFilePath); //move the pictures
             } else {
-                $error['image'] = "Error: There was an error moving $fileName to the upload directory.";
+                $errors['image'] = "There was an error moving $fileName to the upload directory.";
             }
         }
     }
@@ -113,15 +119,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         $antiqueObj->barangay = $barangay;
         $antiqueObj->city = $city;
         $antiqueObj->postal_code = $code;
-
-
+        
         // Attempt to add the product to the database.
-        if($antiqueObj->addAntique()){
-            // If successful, redirect to the product listing page.
-            header('Location: browse.php');
+        $antiqueId = $antiqueObj->addAntique();
+        echo $antiqueId;
+        if (!empty($antiqueId)) {
+            // Convert array to JSON
+            $imagePathsJson = json_encode($img_src);
+
+            // Save the JSON string in the database
+            if ($antiqueObj->insertImagePath($antiqueId, $imagePathsJson)) {
+                // Success message or further processing
+                header('Location: browse.php');
+            } else {
+                // Error handling
+                rollbackUploadedImages($img_src);
+                echo "Failed to save image paths.";
+            }
         } else {
-            // If an error occurs during insertion, display an error message.
-            echo 'Something went wrong when adding the new product.';
+            rollbackUploadedImages($img_src);
+            echo "Failed to add antique.";
         }
     }
 }
@@ -139,10 +156,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 </head>
 <body>
     <div class="container">
-
-        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+        <form action="" method="post" enctype="multipart/form-data" autocomplete="off" id="listing-form">
             <button onclick="window.location.href='user-landing.php';"><i class='bx bx-arrow-back'></i></button>
-            <br> <br>
+            <br><br>
+
+            <?= var_export($img_src)?>
+
             <h2>Antique Listing Form</h2>
             <p> All fields are required</p>
             <hr><br>
@@ -195,12 +214,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 </div>
             </label>
 
-            <div img-upload>
+            <div class="img-upload">
                 <h2>Upload image</h2>
                 <span><?= $errors['image'] ?? '' ?></span>
-                
+                <br><br>
 
-                <input type="file" name="images[]" id="imageInput" accept="image/*" max="5" multiple oninput="previewImages()">
+                <input type="file" name="images[]" id="imageInput" accept="image/*" multiple>
                 <br><br>
                 <!-- Container to hold the image previews -->
                 <div class="preview-container" id="previewContainer"></div>
@@ -211,13 +230,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
         </form>
     </div>
+
     <script>
         let selectedFiles = [];
 
         // This function handles the file input change event
         function handleFileSelection(event) {
             const newFiles = Array.from(event.target.files); // Get the newly selected files
-            const maxFiles = 5; // Maximum number of files allowed
+            const maxFiles = 4; // Maximum number of files allowed
 
             // Add new files to selectedFiles, avoiding duplicates
             newFiles.forEach(file => {
