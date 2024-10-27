@@ -2,6 +2,7 @@
 require_once 'database.php';
 
 class Antique {
+    //Antique Table Properties
     public $id = '';
     public $antique_name = '';
     public $description = '';
@@ -13,6 +14,7 @@ class Antique {
     public $city = '';
     public $postal_code = '';
 
+    //Antique Images Table Properties
     public $img_src = '';
 
     protected $db;
@@ -22,22 +24,61 @@ class Antique {
     }
 
     function addAntique() {
-        $sql = "INSERT INTO antique (antique_name, description, category_id, year, value, street, barangay, city, postal_code)
-                                      VALUES (:antique_name, :description, :category_id, :year, :value, :street, :barangay, :city, :postal_code);";
+        try {
+            $this->db->connect()->beginTransaction();
+
+            $sql = "INSERT INTO antique (antique_name, description, category_id, year, value, street, barangay, city, postal_code)
+                    VALUES (:antique_name, :description, :category_id, :year, :value, :street, :barangay, :city, :postal_code);";
         
-        $query = $this->db->connect()->prepare($sql);
+            $query = $this->db->connect()->prepare($sql);
 
-        $query->bindParam(':antique_name', $this->antique_name);
-        $query->bindParam(':description', $this->description);
-        $query->bindParam(':category_id', $this->category_id);
-        $query->bindParam(':year', $this->year);
-        $query->bindParam(':value', $this->value);
-        $query->bindParam(':street', $this->street);
-        $query->bindParam(':barangay', $this->barangay);
-        $query->bindParam(':city', $this->city);
-        $query->bindParam(':postal_code', $this->postal_code);
+            $query->bindParam(':antique_name', $this->antique_name);
+            $query->bindParam(':description', $this->description);
+            $query->bindParam(':category_id', $this->category_id);
+            $query->bindParam(':year', $this->year);
+            $query->bindParam(':value', $this->value);
+            $query->bindParam(':street', $this->street);
+            $query->bindParam(':barangay', $this->barangay);
+            $query->bindParam(':city', $this->city);
+            $query->bindParam(':postal_code', $this->postal_code);
 
-        return $query->execute();
+            $antiqueId = '';
+            if($query->execute()) {
+                // Retrieve the last inserted ID for this transaction
+                $antiqueId = $this->db->connect()->lastInsertId();
+                $this->db->connect()->commit();
+                
+                return $antiqueId;
+            }
+
+        } catch (PDOException $e) {
+            $this->db->connect()->rollBack();
+            return false;
+        }
+    }
+
+    function insertImagePath($antiqueId, $imagePath) {
+        try {
+            $this->db->connect()->beginTransaction();
+
+            $sql = "INSERT INTO antique_images (antique_id, img_path) 
+                    VALUES (:antiqueId, :imagePath);";
+
+            $query = $this->db->connect()->prepare($sql);
+
+            $query->bindParam(':antiqueId', $antiqueId);
+            $query->bindParam(':imagePath', $imagePath);
+
+            if($query->execute()) {
+                $this->db->connect()->commit();
+                return true;
+            }
+
+        } catch (PDOException $e) {
+
+            $this->db->connect()->rollBack();
+            return false;
+        }
     }
 
     function fetchAllRecord($keyword = ''){
