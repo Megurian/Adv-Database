@@ -14,3 +14,12 @@ function targetFilePath($fileName, $antiqueName, $uploadDir) {
     $newFileName = $antiqueName . "_" . uniqid() . '.' . $fileActualExt;
     return $targetFilePath = $uploadDir . $newFileName;
 }
+
+//rollback upload to asset when database upload img path fail
+function rollbackUploadedImages($img_src) {
+    foreach ($img_src as $path) {
+        if (file_exists($path)) {
+            unlink($path); // Delete the file from the server
+        }
+    }
+}
